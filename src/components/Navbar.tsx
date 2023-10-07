@@ -15,10 +15,8 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon, AddIcon } from "@chakra-ui/icons";
-// import { CgProfile } from "react-icons/cg";
-// import Avatar from "avataaars";
-// import { generateRandomAvatarOptions } from "../../utils/avatar";
-// import { px } from "framer-motion";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+
 import { Link } from "@chakra-ui/next-js";
 
 export default function Navbar() {
@@ -88,54 +86,8 @@ export default function Navbar() {
                   </Button>
                 </Link>
               </HStack>
+              <ConnectButton />
             </div>
-
-            {/* {state == null ? (
-                  <Button
-                    display="flex"
-                    flexDir="row"
-                    variant={"solid"}
-                    colorScheme={"teal"}
-                    size={"sm"}
-                    mr={4}
-                    leftIcon={<Icon as={CgProfile} boxSize={6} />}
-                    onClick={() => auth.signIn() && navigate("/profile")}
-                  >
-                    Sign In
-                  </Button>
-                ) : (
-                  <Menu>
-                    <MenuButton
-                      as={Button}
-                      rounded={"full"}
-                      variant={"link"}
-                      cursor={"pointer"}
-                      minW={0}
-                    >
-                      <Avatar
-                        size={"sm"}
-                        style={{
-                          width: "40px",
-                          height: "40px",
-                        }}
-                        avatarStyle="Circle"
-                        {...generateRandomAvatarOptions()}
-                      />
-                    </MenuButton>
-                    <MenuList>
-                      <MenuItem>
-                        Welcome,{" "}
-                        {state.userId.slice(0, 4) + "..." + state.userId.slice(-4)}
-                      </MenuItem>
-                      <MenuDivider />
-                      <MenuItem as={Link} to="/profile">
-                        Profile
-                      </MenuItem>
-                      <MenuDivider />
-                      <MenuItem onClick={() => auth.signOut()}>Sign Out</MenuItem>
-                    </MenuList>
-                  </Menu>
-                )} */}
           </Flex>
         </Flex>
 
