@@ -14,10 +14,13 @@
     "@chakra-ui/react": "^2.8.1",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@particle-network/rainbowkit-ext": "^1.2.0",
+    "@rainbow-me/rainbowkit": "^1.1.1",
     "framer-motion": "^10.16.4",
     "next": "13.5.4",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "wagmi": "^1.4.3"
   },
   "devDependencies": {
     "@types/node": "^20",
