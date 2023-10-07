@@ -22,7 +22,7 @@ import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
 
 import { ParticleNetwork } from "@particle-network/auth";
-import { arbitrum, mainnet, optimism, polygon } from "wagmi/chains";
+import { sepolia } from "wagmi/chains";
 
 import { particleWallet } from "@particle-network/rainbowkit-ext";
 
@@ -33,7 +33,7 @@ new ParticleNetwork({
 });
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mainnet, polygon, optimism, arbitrum],
+  [sepolia],
   [publicProvider()]
 );
 
