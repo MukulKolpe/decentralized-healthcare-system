@@ -40,9 +40,9 @@
 				"type": "uint256"
 			},
 			{
-				"internalType": "uint256",
-				"name": "_userExp",
-				"type": "uint256"
+				"internalType": "string",
+				"name": "_userEmail",
+				"type": "string"
 			},
 			{
 				"internalType": "string",
@@ -91,7 +91,59 @@
 				"type": "uint256"
 			}
 		],
+		"name": "getMapping6length",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_userId",
+				"type": "uint256"
+			}
+		],
 		"name": "reportUser",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_userId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "_isHandicap",
+				"type": "bool"
+			},
+			{
+				"internalType": "bool",
+				"name": "_isBp",
+				"type": "bool"
+			},
+			{
+				"internalType": "bool",
+				"name": "_isDiabetes",
+				"type": "bool"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_userExp",
+				"type": "uint256"
+			}
+		],
+		"name": "takeUserHistory",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -123,6 +175,69 @@
 				"internalType": "bool",
 				"name": "",
 				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "userIdtoPatientHistory",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "userId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "isHandicap",
+				"type": "bool"
+			},
+			{
+				"internalType": "bool",
+				"name": "isBp",
+				"type": "bool"
+			},
+			{
+				"internalType": "bool",
+				"name": "isDiabetes",
+				"type": "bool"
+			},
+			{
+				"internalType": "uint256",
+				"name": "userExp",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "userIdtoPrevMedicalHistory",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
 			}
 		],
 		"stateMutability": "view",
@@ -183,9 +298,9 @@
 				"type": "uint256"
 			},
 			{
-				"internalType": "uint256",
-				"name": "userExp",
-				"type": "uint256"
+				"internalType": "string",
+				"name": "userEmail",
+				"type": "string"
 			},
 			{
 				"internalType": "string",

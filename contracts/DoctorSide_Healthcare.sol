@@ -87,7 +87,7 @@ contract DoctorSide_Healthcare is UserSide_Healthcare{
     }
 
     constructor(){
-        createUser("System Admin", "9022 2000 1022 0911", "109869", 0, 0, "Moderator", "ipfs.io/ipfs/", "ipfs.io/ipfs/", 1);
+        createUser("System Admin", "9022 2000 1022 0911", "109869", 0,"kayalsoham61@gmail.com", "Moderator", "ipfs.io/ipfs/", "ipfs.io/ipfs/", 1);
         approveUser(1);
     }
 
