@@ -16,7 +16,7 @@ contract UserSide_Healthcare{
         string userAadhar;
         string userLicenseNo;
         uint256 userAge;
-        uint256 userExp;
+        string userEmail;
         string userSpeciality;
         string userProfileImg;
         string userMedicalDegree;
@@ -25,16 +25,31 @@ contract UserSide_Healthcare{
         bool isVerified;
     }
 
+    struct PatientHistory{
+        uint256 userId;
+        bool isHandicap;
+        bool isBp;
+        bool isDiabetes;
+        uint256 userExp;
+    }
+
     mapping(address => uint256) public userWalletAddresstoUserId;
     mapping(uint256 => User) public userIdtoUser;
     mapping(uint256 => bool) public userIdtoBlacklist;
     mapping(uint256 => uint256) public userIdtoReportUser;
+    mapping(uint256 => PatientHistory) public userIdtoPatientHistory;
+    mapping(uint256 => string[]) public userIdtoPrevMedicalHistory; // mapping 6
     address admin;
 
-    function createUser(string memory _userName,string memory _userAadhar,string memory _userLicenseNo,uint256 _userAge,uint256 _userExp,string memory _userSpeciality,string memory _userProfileImg,string memory _userMedicalDegree,uint256 _userRole) public {
-        User memory u1 = User(totalUsers,_userName,_userAadhar,_userLicenseNo,_userAge,_userExp,_userSpeciality,_userProfileImg,_userMedicalDegree,_userRole,msg.sender,false);
+    function createUser(string memory _userName,string memory _userAadhar,string memory _userLicenseNo,uint256 _userAge,string memory _userEmail,string memory _userSpeciality,string memory _userProfileImg,string memory _userMedicalDegree,uint256 _userRole) public {
+        User memory u1 = User(totalUsers,_userName,_userAadhar,_userLicenseNo,_userAge,_userEmail,_userSpeciality,_userProfileImg,_userMedicalDegree,_userRole,msg.sender,false);
         userIdtoUser[totalUsers] = u1;
         totalUsers++;
+    }
+
+    function takeUserHistory (uint256 _userId,bool _isHandicap,bool _isBp,bool _isDiabetes,uint256 _userExp) public{
+        PatientHistory memory pt1 = PatientHistory(totalUsers,_isHandicap,_isBp,_isDiabetes,_userExp);
+        userIdtoPatientHistory[_userId] = pt1;
     }
 
     constructor(){
@@ -62,5 +77,9 @@ contract UserSide_Healthcare{
         if(userIdtoReportUser[_userId] > 100){
             userIdtoBlacklist[_userId] = true;
         }
+    }
+
+    function getMapping6length(uint256 _userId) public view returns(uint256) {
+        return userIdtoPrevMedicalHistory[_userId].length;
     }
 }
