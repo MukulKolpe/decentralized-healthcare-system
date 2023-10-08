@@ -31,7 +31,8 @@ import documentabi from "../../utils/doctorsideabi.json";
 const CardComponent = ({ sysUser, signal }) => {
   const age = sysUser.userAge.toNumber();
   const role = sysUser.userRole.toNumber();
-  console.log(sysUser);
+  const userId = sysUser.userId.toNumber();
+  console.log(userId);
 
   const [size, setSize] = useState("md");
   const [adharsize, setAdharSize] = useState("md");
@@ -63,13 +64,12 @@ const CardComponent = ({ sysUser, signal }) => {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(
-        process.env.NEXT_PUBLIC_REQUESTSIDE_ADDRESS,
-        requestabi,
+        "0x81B812D3b365046eD4C6848894cEA7961da59De5",
+        documentabi,
         signer
       );
-      const accounts = await provider.listAccounts();
-      const currUserId = await contract.userEmailtoId(sysUser.email);
-      const tx = await contract.verifyUser(currUserId);
+
+      const tx = await contract.approveUser(userId);
       await tx.wait();
       toast({
         title: "Registration approved! ",
