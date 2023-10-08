@@ -85,6 +85,11 @@ export default function Navbar() {
                     Admin
                   </Button>
                 </Link>
+                <Link href="/profile">
+                  <Button w="full" variant="ghost">
+                    Profile
+                  </Button>
+                </Link>
               </HStack>
               <ConnectButton />
             </div>
