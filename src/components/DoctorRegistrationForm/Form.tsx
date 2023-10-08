@@ -235,7 +235,7 @@ const Form1 = ({ getName, getAge, getProfile }) => {
   );
 };
 
-const Form2 = ({ getAdhar, getSpec, getYoe }) => {
+const Form2 = ({ getAdhar, getSpec, getEmail }) => {
   const toast = useToast();
   const inputRef = useRef(null);
   const [aadharImage, setAadharImage] = useState();
@@ -289,8 +289,8 @@ const Form2 = ({ getAdhar, getSpec, getYoe }) => {
   const handleSpec = (e) => {
     getSpec(e);
   };
-  const handleYoe = (e) => {
-    getYoe(e);
+  const handleEmail = (e) => {
+    getEmail(e);
   };
 
   getAdhar(ipfsUrl);
@@ -299,6 +299,19 @@ const Form2 = ({ getAdhar, getSpec, getYoe }) => {
       <Heading w="100%" textAlign={"center"} fontWeight="normal" mb="2%">
         Doctor Registration
       </Heading>
+      <FormControl mt="2%">
+        <FormLabel htmlFor="email" fontWeight={"normal"}>
+          Email address
+        </FormLabel>
+        <Input
+          id="email"
+          type="email"
+          placeholder="doctor@gmail.com"
+          autoComplete="email"
+          onChange={(e) => handleEmail(e.target.value)}
+        />
+        <FormHelperText>We'll never share your email.</FormHelperText>
+      </FormControl>
       <FormControl mt="2%">
         <FormLabel
           fontWeight={"normal"}
@@ -448,23 +461,6 @@ const Form2 = ({ getAdhar, getSpec, getYoe }) => {
           <option>Urology</option>
           <option>Other</option>
         </Select>
-      </FormControl>
-      <FormControl mr="5%" mt="2%">
-        <FormLabel htmlFor="yoe" fontWeight={"normal"}>
-          Total years of experience
-        </FormLabel>
-        <NumberInput
-          step={1}
-          defaultValue={0}
-          min={1}
-          onChange={(value) => handleYoe(value)}
-        >
-          <NumberInputField />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
-        </NumberInput>
       </FormControl>
     </SimpleGrid>
   );
@@ -655,7 +651,7 @@ export default function Multistep() {
   const [profile, setProfile] = useState("");
   const [adhar, setAdhar] = useState("");
   const [spec, setSpec] = useState("");
-  const [yoe, setYoe] = useState("");
+  const [email, setEmail] = useState("");
   const [degree, setDegree] = useState("");
   const [licenseNo, setLicenseNo] = useState("");
   const [loading, setLoading] = useState(false);
@@ -665,7 +661,7 @@ export default function Multistep() {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(
-        "0x0ae3e46d98ff4ec9dae682de596ab307a89fb2ca",
+        "0x81B812D3b365046eD4C6848894cEA7961da59De5",
         doctorsideabi,
         signer
       );
@@ -676,7 +672,7 @@ export default function Multistep() {
         adhar,
         licenseNo,
         age,
-        yoe,
+        email,
         spec,
         profile,
         degree,
@@ -694,7 +690,7 @@ export default function Multistep() {
       const signer = ethersProvider.getSigner();
 
       const contract = new ethers.Contract(
-        "0x0ae3e46d98ff4ec9dae682de596ab307a89fb2ca",
+        "0x81B812D3b365046eD4C6848894cEA7961da59De5",
         doctorsideabi,
         signer
       );
@@ -703,7 +699,7 @@ export default function Multistep() {
         adhar,
         licenseNo,
         age,
-        yoe,
+        email,
         spec,
         profile,
         degree,
@@ -748,7 +744,7 @@ export default function Multistep() {
           <Form2
             getAdhar={(q) => setAdhar(q)}
             getSpec={(q) => setSpec(q)}
-            getYoe={(q) => setYoe(q)}
+            getEmail={(q) => setEmail(q)}
           />
         ) : (
           <Form3
