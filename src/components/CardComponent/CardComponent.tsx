@@ -70,6 +70,18 @@ const CardComponent = ({ sysUser, signal }) => {
       );
 
       const tx = await contract.approveUser(userId);
+      const data = { email: email };
+
+      fetch("http://localhost:5000/doctor-approval", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+        .then((response) => response.json())
+        .then((data) => console.log(data))
+        .catch((error) => console.error("Error:", error));
       await tx.wait();
       toast({
         title: "Registration approved! ",
