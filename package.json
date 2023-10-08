@@ -16,6 +16,7 @@
     "@emotion/styled": "^11.11.0",
     "@particle-network/rainbowkit-ext": "^1.2.0",
     "@rainbow-me/rainbowkit": "^1.1.1",
+    "ethers": "5.6.1",
     "framer-motion": "^10.16.4",
     "next": "13.5.4",
     "react": "^18",
