@@ -1,5 +1,8 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
+import { HuddleIframe } from "@huddle01/iframe";
+import axios from "axios";
+
 import { ethers } from "ethers";
 import { ParticleProvider } from "@particle-network/provider";
 import doctorsideabi from "../../utils/doctorsideabi.json";
@@ -73,6 +76,7 @@ const index = () => {
   const [endTime, setEndTime] = useState("");
   const [timeSlots, setTimeSlots] = useState([]);
   const [signal, setSignal] = useState(false);
+  const [meetLink, setMeetLink] = useState();
   const toast = useToast();
   const router = useRouter();
   const [appSignal, setAppSignal] = useState(false);
@@ -81,6 +85,8 @@ const index = () => {
   const [displayImage, setDisplayImage] = useState();
   const [ipfsUrl, setIpfsUrl] = useState("");
   const [reportName, setReportName] = useState("");
+  // doctor email: - doctorInfo.userEmail
+  // patient email: -
 
   const changeHandler = () => {
     setDisplayImage(inputRef.current?.files[0]);
@@ -254,6 +260,24 @@ const index = () => {
       await tx.wait();
       router.refresh();
     }
+  };
+
+  const getLink = async () => {
+    const response = await axios.post(
+      "https://api.huddle01.com/api/v1/create-iframe-room",
+      {
+        title: "Consulatation meet",
+        roomLocked: false,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": "zmBzpDcHjwa1IkbJhUaPw4OmS7BJtIPu",
+        },
+      }
+    );
+    //console.log(doctorInfo)
+    setMeetLink(response.data.data.meetingLink);
   };
 
   const approveAppointment = async (givenAppId) => {
@@ -530,6 +554,8 @@ const index = () => {
                       <Th>App Time</Th>
                       <Th>App Status</Th>
                       <Th>Upload User Report</Th>
+                      <Th>Generate Meeting</Th>
+                      <Th>Meeting Link</Th>
                     </Tr>
                   </Thead>
                   <Tbody>
@@ -559,6 +585,14 @@ const index = () => {
                         <Td>
                           <Button onClick={onOpen}>Upload Report</Button>
                         </Td>
+                        <Td>
+                          <Button
+                            onClick={getLink}
+                          >
+                            Generate Link
+                          </Button>
+                        </Td>
+                        <Td>{meetLink}</Td>
                         <Modal isOpen={isOpen} onClose={onClose}>
                           <ModalOverlay />
                           <ModalContent>
