@@ -32,7 +32,6 @@ const CardComponent = ({ sysUser, signal }) => {
   const age = sysUser.userAge.toNumber();
   const role = sysUser.userRole.toNumber();
   const userId = sysUser.userId.toNumber();
-  console.log(userId);
 
   const [size, setSize] = useState("md");
   const [adharsize, setAdharSize] = useState("md");
@@ -70,8 +69,8 @@ const CardComponent = ({ sysUser, signal }) => {
       );
 
       const tx = await contract.approveUser(userId);
-      const data = { email: email };
 
+      const data = { email: sysUser[5] };
       fetch("http://localhost:5000/doctor-approval", {
         method: "POST",
         headers: {
@@ -82,6 +81,7 @@ const CardComponent = ({ sysUser, signal }) => {
         .then((response) => response.json())
         .then((data) => console.log(data))
         .catch((error) => console.error("Error:", error));
+
       await tx.wait();
       toast({
         title: "Registration approved! ",
