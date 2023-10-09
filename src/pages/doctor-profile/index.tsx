@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ethers } from "ethers";
 import { ParticleProvider } from "@particle-network/provider";
 import doctorsideabi from "../../utils/doctorsideabi.json";
@@ -27,6 +27,21 @@ import {
   Td,
   TableCaption,
   TableContainer,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  FormHelperText,
+  VisuallyHidden,
+  Stack,
+  Icon,
 } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
@@ -61,6 +76,57 @@ const index = () => {
   const toast = useToast();
   const router = useRouter();
   const [appSignal, setAppSignal] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const inputRef = useRef(null);
+  const [displayImage, setDisplayImage] = useState();
+  const [ipfsUrl, setIpfsUrl] = useState("");
+  const [reportName, setReportName] = useState("");
+
+  const changeHandler = () => {
+    setDisplayImage(inputRef.current?.files[0]);
+  };
+
+  const uploadIPFS = async () => {
+    const form = new FormData();
+    form.append("file", displayImage ? displayImage : "");
+
+    const options = {
+      method: "POST",
+      body: form,
+      headers: {
+        Authorization: process.env.NEXT_PUBLIC_NFTPort_API_KEY,
+      },
+    };
+
+    await fetch("https://api.nftport.xyz/v0/files", options)
+      .then((response) => response.json())
+      .then((response) => {
+        // console.log(response);
+        // console.log(response.ipfs_url);
+        setIpfsUrl(response.ipfs_url);
+
+        if (displayImage) {
+          toast({
+            title: "Display Image Uploaded to the IPFS.",
+            description: "Congratulations 🎉 ",
+            status: "success",
+            duration: 1000,
+            isClosable: true,
+            position: "top-right",
+          });
+        } else {
+          toast({
+            title: "Display Image not Uploaded to the IPFS.",
+            description: "Please attach the degree certificate ",
+            status: "error",
+            duration: 1000,
+            isClosable: true,
+            position: "top-right",
+          });
+        }
+      })
+      .catch((err) => console.error(err));
+  };
 
   const loadDoctorinfo = async () => {
     if (window.ethereum._state.accounts.length !== 0) {
@@ -212,6 +278,39 @@ const index = () => {
         position: "top-right",
       });
       await tx.wait();
+      router.refresh();
+    }
+  };
+
+  const uploadPatientReport = async (patientWallet, doctorWallet) => {
+    if (window.ethereum._state.accounts.length !== 0) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(
+        "0x81B812D3b365046eD4C6848894cEA7961da59De5",
+        doctorsideabi,
+        signer
+      );
+      const accounts = await provider.listAccounts();
+      setUserWalletAddress(accounts[0]);
+
+      const tx = await contract.uploadMedicalReprt(
+        reportName,
+        patientWallet,
+        doctorWallet,
+        ipfsUrl
+      );
+      toast({
+        title: "Document is being uploaded",
+        description:
+          "A confirmation mail will be sent to the associated patient",
+        status: "info",
+        duration: 1000,
+        isClosable: true,
+        position: "top-right",
+      });
+      await tx.wait();
+      onClose();
       router.refresh();
     }
   };
@@ -430,6 +529,7 @@ const index = () => {
                       <Th>App date</Th>
                       <Th>App Time</Th>
                       <Th>App Status</Th>
+                      <Th>Upload User Report</Th>
                     </Tr>
                   </Thead>
                   <Tbody>
@@ -456,6 +556,171 @@ const index = () => {
                             </Button>
                           </Td>
                         )}
+                        <Td>
+                          <Button onClick={onOpen}>Upload Report</Button>
+                        </Td>
+                        <Modal isOpen={isOpen} onClose={onClose}>
+                          <ModalOverlay />
+                          <ModalContent>
+                            <ModalHeader>Modal Title</ModalHeader>
+                            <ModalCloseButton />
+                            <ModalBody>
+                              <FormControl>
+                                <FormLabel>Appointment Id</FormLabel>
+                                <Input
+                                  type="text"
+                                  value={Number(appoint.appPayload.appId)}
+                                />
+
+                                <FormLabel>Patient Name</FormLabel>
+                                <Input
+                                  type="text"
+                                  value={appoint.patPayload.userName}
+                                />
+
+                                <FormLabel>Doctor Name</FormLabel>
+                                <Input
+                                  type="text"
+                                  value={doctorInfo.userName}
+                                />
+
+                                <FormLabel>Patient Wallet Address</FormLabel>
+                                <Input
+                                  type="text"
+                                  value={
+                                    appoint.appPayload.patientWalletAddress
+                                  }
+                                />
+
+                                <FormLabel>Doctor Wallet Address</FormLabel>
+                                <Input
+                                  type="text"
+                                  value={appoint.appPayload.doctorWalletAddress}
+                                />
+
+                                <FormLabel>Appointment Date and time</FormLabel>
+                                <Input
+                                  type="text"
+                                  value={`${appoint.appPayload.appDate} (${appoint.appPayload.startTime} - ${appoint.appPayload.endTime})`}
+                                />
+
+                                <FormLabel>Report Name</FormLabel>
+                                <Input
+                                  type="text"
+                                  onChange={(e) => {
+                                    setReportName(e.target.value);
+                                  }}
+                                  value={reportName}
+                                />
+
+                                <FormLabel mt={2}>Upload Document</FormLabel>
+                                <Flex
+                                  mt={1}
+                                  justify="center"
+                                  px={6}
+                                  pt={5}
+                                  pb={6}
+                                  borderWidth={2}
+                                  _dark={{
+                                    color: "gray.500",
+                                  }}
+                                  borderStyle="dashed"
+                                  rounded="md"
+                                >
+                                  <Stack spacing={1} textAlign="center">
+                                    <Icon
+                                      mx="auto"
+                                      boxSize={12}
+                                      color="gray.400"
+                                      _dark={{
+                                        color: "gray.500",
+                                      }}
+                                      stroke="currentColor"
+                                      fill="none"
+                                      viewBox="0 0 48 48"
+                                      aria-hidden="true"
+                                    >
+                                      <path
+                                        d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                      />
+                                    </Icon>
+                                    <Text>{displayImage?.name}</Text>
+                                    <Flex
+                                      fontSize="sm"
+                                      color="gray.600"
+                                      _dark={{
+                                        color: "gray.400",
+                                      }}
+                                      alignItems="baseline"
+                                    >
+                                      <chakra.label
+                                        htmlFor="file-upload"
+                                        cursor="pointer"
+                                        rounded="md"
+                                        fontSize="md"
+                                        color="brand.600"
+                                        _dark={{
+                                          color: "brand.200",
+                                        }}
+                                        pos="relative"
+                                        _hover={{
+                                          color: "brand.400",
+                                          _dark: {
+                                            color: "brand.300",
+                                          },
+                                        }}
+                                      >
+                                        <span>Upload Report</span>
+                                        <VisuallyHidden>
+                                          <input
+                                            id="file-upload"
+                                            name="file-upload"
+                                            type="file"
+                                            ref={inputRef}
+                                            onChange={changeHandler}
+                                          />
+                                        </VisuallyHidden>
+                                      </chakra.label>
+                                      <Text pl={1}>or drag and drop</Text>
+                                    </Flex>
+                                    <Text
+                                      fontSize="xs"
+                                      color="gray.500"
+                                      _dark={{
+                                        color: "gray.50",
+                                      }}
+                                    >
+                                      PNG, JPG, GIF up to 10MB
+                                    </Text>
+                                    <Button onClick={uploadIPFS} mt="2%">
+                                      Upload to IPFS
+                                    </Button>
+                                  </Stack>
+                                </Flex>
+                              </FormControl>
+                            </ModalBody>
+
+                            <ModalFooter>
+                              <Button mr={3} onClick={onClose}>
+                                Close
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                onClick={() => {
+                                  uploadPatientReport(
+                                    appoint.appPayload.patientWalletAddress,
+                                    appoint.appPayload.doctorWalletAddress
+                                  );
+                                }}
+                              >
+                                Submit
+                              </Button>
+                            </ModalFooter>
+                          </ModalContent>
+                        </Modal>
                       </Tr>
                     ))}
                   </Tbody>
