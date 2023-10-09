@@ -44,10 +44,26 @@ export default function ProfileForm() {
   const inputRef = useRef(null);
   const toast = useToast();
   const [recordImage, setRecordImage] = useState();
+  const [name, setName] = useState("");
   const [ipfsUrl, setIpfsUrl] = useState("");
 
   const changeHandler = () => {
     setRecordImage(inputRef.current?.files[0]);
+  };
+
+  const uploadReport = async () => {
+    if (window.ethereum._state.accounts.length !== 0) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(
+        "0x81B812D3b365046eD4C6848894cEA7961da59De5",
+        doctorsideabi,
+        signer
+      );
+
+      const accounts = await provider.listAccounts();
+      contract.uploadMedicalReprt(name, accounts[0], accounts[0], ipfsUrl);
+    }
   };
 
   const handleSubmit = async () => {
@@ -59,6 +75,7 @@ export default function ProfileForm() {
         doctorsideabi,
         signer
       );
+
       const accounts = await provider.listAccounts();
       contract.userWalletAddresstoUserId(accounts[0]).then((id) => {
         let numid = id.toNumber();
@@ -299,6 +316,20 @@ export default function ProfileForm() {
               Upload to IPFS
             </Button>
           </Flex>
+
+          <FormControl mr="5%">
+            <FormLabel htmlFor="first-name" fontWeight={"normal"}>
+              Report Name
+            </FormLabel>
+            <Input
+              id="first-name"
+              placeholder="Full name"
+              onChange={(e) => setName(e.target.value)}
+            />
+          </FormControl>
+          <Button mt="2%" onClick={uploadReport}>
+            Upload Medical Report
+          </Button>
         </FormControl>
         <Button onClick={handleSubmit} mt="2%">
           Submit
