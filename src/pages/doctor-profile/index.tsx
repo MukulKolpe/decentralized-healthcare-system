@@ -85,6 +85,11 @@ const index = () => {
   const [displayImage, setDisplayImage] = useState();
   const [ipfsUrl, setIpfsUrl] = useState("");
   const [reportName, setReportName] = useState("");
+  const [clientMail, setClientMail] = useState("");
+  const [aptDate, setAptDate] = useState("");
+  const [aptstartTime, setaptStartTime] = useState("");
+  const [aptendTime, setaptEndTime] = useState("");
+
   const [modalPatientName, setModalPatientName] = useState("");
   const [modalAppointmentDateTime, setModalAppointmentDateTime] = useState("");
   const [modalPatientWallet, setModalPatientWallet] = useState("");
@@ -189,11 +194,16 @@ const index = () => {
             tempAppointmentId
           );
           console.log(tempAppointment);
+
+          setAptDate(tempAppointment[1]);
+          setaptStartTime(tempAppointment[2]);
+          setaptEndTime(tempAppointment[3]);
           appPatId = await contract.userWalletAddresstoUserId(
             tempAppointment.patientWalletAddress
           );
           appPat = await contract.userIdtoUser(appPatId);
-          console.log(appPat);
+          setClientMail(appPat[5]);
+
           setAppointments((prevState) => [
             ...prevState,
             { appPayload: tempAppointment, patPayload: appPat },
@@ -279,7 +289,59 @@ const index = () => {
         },
       }
     );
-    //console.log(doctorInfo)
+    const meet1 = response.data.data.meetingLink;
+    console.log(aptDate);
+    console.log(meet1);
+    console.log(aptstartTime);
+    console.log(aptendTime);
+
+    const data = {
+      email: clientMail,
+      link: meet1,
+      date: aptDate,
+      startTime: aptstartTime,
+      endTime: aptendTime,
+    };
+    fetch("http://localhost:5000/patient-link", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => console.error("Error:", error));
+
+    const data2 = {
+      email: doctorInfo.userEmail,
+      link: meet1,
+      date: aptDate,
+      startTime: aptstartTime,
+      endTime: aptendTime,
+    };
+
+    fetch("http://localhost:5000/doctor-link", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => console.error("Error:", error));
+
+    toast({
+      title: "Meet Link sent on mail.",
+      description:
+        "We have sent meet link to both your mail as well as patients mail ",
+      status: "success",
+      duration: 1000,
+      isClosable: true,
+      position: "top-right",
+    });
+
     setMeetLink(response.data.data.meetingLink);
   };
 
@@ -743,18 +805,9 @@ const index = () => {
                         )}
                         <Td>
                           <Button
-                            onClick={() => {
-                              setModalPatientName(appoint.patPayload.userName);
-                              setModalAppointmentDateTime(
-                                `${appoint.appPayload.appDate} (${appoint.appPayload.startTime} - ${appoint.appPayload.endTime})`
-                              );
-                              setModalPatientWallet(
-                                appoint.patPayload.userWalletAddress
-                              );
-                              onOpen();
-                            }}
+                            onClick={getLink}
                           >
-                            Upload Report
+                            Generate Link
                           </Button>
                         </Td>
                         <Td>
