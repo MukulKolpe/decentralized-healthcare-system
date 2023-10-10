@@ -50,7 +50,7 @@ const Admin = () => {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(
-        "0x81B812D3b365046eD4C6848894cEA7961da59De5",
+        process.env.NEXT_PUBLIC_DOCTORSIDE_ADDRESS,
         documentabi,
         signer
       );
