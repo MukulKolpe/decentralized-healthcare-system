@@ -90,6 +90,9 @@ const index = () => {
   const [aptstartTime, setaptStartTime] = useState("");
   const [aptendTime, setaptEndTime] = useState("");
 
+  const [modalPatientName, setModalPatientName] = useState("");
+  const [modalAppointmentDateTime, setModalAppointmentDateTime] = useState("");
+  const [modalPatientWallet, setModalPatientWallet] = useState("");
   // doctor email: - doctorInfo.userEmail
   // patient email: -
 
@@ -144,7 +147,7 @@ const index = () => {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(
-        "0x81B812D3b365046eD4C6848894cEA7961da59De5",
+        process.env.NEXT_PUBLIC_DOCTORSIDE_ADDRESS,
         doctorsideabi,
         signer
       );
@@ -170,7 +173,7 @@ const index = () => {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(
-        "0x81B812D3b365046eD4C6848894cEA7961da59De5",
+        process.env.NEXT_PUBLIC_DOCTORSIDE_ADDRESS,
         doctorsideabi,
         signer
       );
@@ -222,7 +225,7 @@ const index = () => {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(
-        "0x81B812D3b365046eD4C6848894cEA7961da59De5",
+        process.env.NEXT_PUBLIC_DOCTORSIDE_ADDRESS,
         doctorsideabi,
         signer
       );
@@ -252,7 +255,7 @@ const index = () => {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(
-        "0x81B812D3b365046eD4C6848894cEA7961da59De5",
+        process.env.NEXT_PUBLIC_DOCTORSIDE_ADDRESS,
         doctorsideabi,
         signer
       );
@@ -347,7 +350,7 @@ const index = () => {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(
-        "0x81B812D3b365046eD4C6848894cEA7961da59De5",
+        process.env.NEXT_PUBLIC_DOCTORSIDE_ADDRESS,
         doctorsideabi,
         signer
       );
@@ -373,7 +376,7 @@ const index = () => {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(
-        "0x81B812D3b365046eD4C6848894cEA7961da59De5",
+        process.env.NEXT_PUBLIC_DOCTORSIDE_ADDRESS,
         doctorsideabi,
         signer
       );
@@ -418,6 +421,162 @@ const index = () => {
 
   return (
     <div>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Upload Report</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <FormControl>
+              {/* <FormLabel>Appointment Id</FormLabel>
+                                <Input
+                                  type="text"
+                                  value={Number(appoint.appPayload.appId)}
+                                /> */}
+
+              <FormLabel>Patient Name</FormLabel>
+              <Input type="text" value={modalPatientName} />
+
+              {/* <FormLabel>Doctor Name</FormLabel>
+                                <Input
+                                  type="text"
+                                  value={doctorInfo.userName}
+                                /> */}
+
+              {/* <FormLabel>Patient Wallet Address</FormLabel>
+                                <Input
+                                  type="text"
+                                  value={
+                                    appoint.appPayload.patientWalletAddress
+                                  }
+                                /> */}
+
+              {/* <FormLabel>Doctor Wallet Address</FormLabel>
+                                <Input
+                                  type="text"
+                                  value={appoint.appPayload.doctorWalletAddress}
+                                /> */}
+
+              <FormLabel>Appointment Date and time</FormLabel>
+              <Input type="text" value={modalAppointmentDateTime} />
+
+              <FormLabel>Report Name</FormLabel>
+              <Input
+                type="text"
+                onChange={(e) => {
+                  setReportName(e.target.value);
+                }}
+                value={reportName}
+              />
+
+              <FormLabel mt={2}>Upload Document</FormLabel>
+              <Flex
+                mt={1}
+                justify="center"
+                px={6}
+                pt={5}
+                pb={6}
+                borderWidth={2}
+                _dark={{
+                  color: "gray.500",
+                }}
+                borderStyle="dashed"
+                rounded="md"
+              >
+                <Stack spacing={1} textAlign="center">
+                  <Icon
+                    mx="auto"
+                    boxSize={12}
+                    color="gray.400"
+                    _dark={{
+                      color: "gray.500",
+                    }}
+                    stroke="currentColor"
+                    fill="none"
+                    viewBox="0 0 48 48"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </Icon>
+                  <Text>{displayImage?.name}</Text>
+                  <Flex
+                    fontSize="sm"
+                    color="gray.600"
+                    _dark={{
+                      color: "gray.400",
+                    }}
+                    alignItems="baseline"
+                  >
+                    <chakra.label
+                      htmlFor="file-upload"
+                      cursor="pointer"
+                      rounded="md"
+                      fontSize="md"
+                      color="brand.600"
+                      _dark={{
+                        color: "brand.200",
+                      }}
+                      pos="relative"
+                      _hover={{
+                        color: "brand.400",
+                        _dark: {
+                          color: "brand.300",
+                        },
+                      }}
+                    >
+                      <span>Upload Report</span>
+                      <VisuallyHidden>
+                        <input
+                          id="file-upload"
+                          name="file-upload"
+                          type="file"
+                          ref={inputRef}
+                          onChange={changeHandler}
+                        />
+                      </VisuallyHidden>
+                    </chakra.label>
+                    <Text pl={1}>or drag and drop</Text>
+                  </Flex>
+                  <Text
+                    fontSize="xs"
+                    color="gray.500"
+                    _dark={{
+                      color: "gray.50",
+                    }}
+                  >
+                    PNG, JPG, GIF up to 10MB
+                  </Text>
+                  <Button onClick={uploadIPFS} mt="2%">
+                    Upload to IPFS
+                  </Button>
+                </Stack>
+              </Flex>
+            </FormControl>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button mr={3} onClick={onClose}>
+              Close
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                uploadPatientReport(
+                  modalPatientWallet,
+                  doctorInfo.userWalletAddress
+                );
+              }}
+            >
+              Submit
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       <Box as={Container} maxW="7xl" mt={14} p={4}>
         <Grid
           templateColumns={{
@@ -645,174 +804,16 @@ const index = () => {
                           </Td>
                         )}
                         <Td>
-                          <Button onClick={onOpen}>Upload Report</Button>
+                          <Button
+                            onClick={getLink}
+                          >
+                            Generate Link
+                          </Button>
                         </Td>
                         <Td>
                           <Button onClick={getLink}>Generate Link</Button>
                         </Td>
                         <Td>{meetLink}</Td>
-                        <Modal isOpen={isOpen} onClose={onClose}>
-                          <ModalOverlay />
-                          <ModalContent>
-                            <ModalHeader>Modal Title</ModalHeader>
-                            <ModalCloseButton />
-                            <ModalBody>
-                              <FormControl>
-                                <FormLabel>Appointment Id</FormLabel>
-                                <Input
-                                  type="text"
-                                  value={Number(appoint.appPayload.appId)}
-                                />
-
-                                <FormLabel>Patient Name</FormLabel>
-                                <Input
-                                  type="text"
-                                  value={appoint.patPayload.userName}
-                                />
-
-                                <FormLabel>Doctor Name</FormLabel>
-                                <Input
-                                  type="text"
-                                  value={doctorInfo.userName}
-                                />
-
-                                <FormLabel>Patient Wallet Address</FormLabel>
-                                <Input
-                                  type="text"
-                                  value={
-                                    appoint.appPayload.patientWalletAddress
-                                  }
-                                />
-
-                                <FormLabel>Doctor Wallet Address</FormLabel>
-                                <Input
-                                  type="text"
-                                  value={appoint.appPayload.doctorWalletAddress}
-                                />
-
-                                <FormLabel>Appointment Date and time</FormLabel>
-                                <Input
-                                  type="text"
-                                  value={`${appoint.appPayload.appDate} (${appoint.appPayload.startTime} - ${appoint.appPayload.endTime})`}
-                                />
-
-                                <FormLabel>Report Name</FormLabel>
-                                <Input
-                                  type="text"
-                                  onChange={(e) => {
-                                    setReportName(e.target.value);
-                                  }}
-                                  value={reportName}
-                                />
-
-                                <FormLabel mt={2}>Upload Document</FormLabel>
-                                <Flex
-                                  mt={1}
-                                  justify="center"
-                                  px={6}
-                                  pt={5}
-                                  pb={6}
-                                  borderWidth={2}
-                                  _dark={{
-                                    color: "gray.500",
-                                  }}
-                                  borderStyle="dashed"
-                                  rounded="md"
-                                >
-                                  <Stack spacing={1} textAlign="center">
-                                    <Icon
-                                      mx="auto"
-                                      boxSize={12}
-                                      color="gray.400"
-                                      _dark={{
-                                        color: "gray.500",
-                                      }}
-                                      stroke="currentColor"
-                                      fill="none"
-                                      viewBox="0 0 48 48"
-                                      aria-hidden="true"
-                                    >
-                                      <path
-                                        d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                    </Icon>
-                                    <Text>{displayImage?.name}</Text>
-                                    <Flex
-                                      fontSize="sm"
-                                      color="gray.600"
-                                      _dark={{
-                                        color: "gray.400",
-                                      }}
-                                      alignItems="baseline"
-                                    >
-                                      <chakra.label
-                                        htmlFor="file-upload"
-                                        cursor="pointer"
-                                        rounded="md"
-                                        fontSize="md"
-                                        color="brand.600"
-                                        _dark={{
-                                          color: "brand.200",
-                                        }}
-                                        pos="relative"
-                                        _hover={{
-                                          color: "brand.400",
-                                          _dark: {
-                                            color: "brand.300",
-                                          },
-                                        }}
-                                      >
-                                        <span>Upload Report</span>
-                                        <VisuallyHidden>
-                                          <input
-                                            id="file-upload"
-                                            name="file-upload"
-                                            type="file"
-                                            ref={inputRef}
-                                            onChange={changeHandler}
-                                          />
-                                        </VisuallyHidden>
-                                      </chakra.label>
-                                      <Text pl={1}>or drag and drop</Text>
-                                    </Flex>
-                                    <Text
-                                      fontSize="xs"
-                                      color="gray.500"
-                                      _dark={{
-                                        color: "gray.50",
-                                      }}
-                                    >
-                                      PNG, JPG, GIF up to 10MB
-                                    </Text>
-                                    <Button onClick={uploadIPFS} mt="2%">
-                                      Upload to IPFS
-                                    </Button>
-                                  </Stack>
-                                </Flex>
-                              </FormControl>
-                            </ModalBody>
-
-                            <ModalFooter>
-                              <Button mr={3} onClick={onClose}>
-                                Close
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                onClick={() => {
-                                  uploadPatientReport(
-                                    appoint.appPayload.patientWalletAddress,
-                                    appoint.appPayload.doctorWalletAddress
-                                  );
-                                }}
-                              >
-                                Submit
-                              </Button>
-                            </ModalFooter>
-                          </ModalContent>
-                        </Modal>
                       </Tr>
                     ))}
                   </Tbody>
