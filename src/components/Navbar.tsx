@@ -80,6 +80,18 @@ export default function Navbar() {
                 display={{ base: "none", md: "flex" }}
                 marginRight={4}
               >
+                <Link href="/book">
+                  <Button w="full" variant="ghost">
+                    Book Appointment
+                  </Button>
+                </Link>
+              </HStack>
+              <HStack
+                as={"nav"}
+                spacing={4}
+                display={{ base: "none", md: "flex" }}
+                marginRight={4}
+              >
                 <Link href="/admin">
                   <Button w="full" variant="ghost">
                     Admin
