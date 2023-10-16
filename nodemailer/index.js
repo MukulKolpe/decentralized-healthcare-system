@@ -75,7 +75,7 @@ app.post("/register-doctor", (req, res) => {
 app.post("/patient-link", (req, res) => {
   const { email, link, date, startTime, endTime } = req.body;
 
-  console.log(link, startTime, endTime);
+  console.log(email + "patient");
 
   // Create an email message
   const mailOptions = {
@@ -116,6 +116,8 @@ app.post("/patient-link", (req, res) => {
 
 app.post("/doctor-link", (req, res) => {
   const { email, link, date, startTime, endTime } = req.body;
+
+  console.log(email + "doctor");
 
   // Create an email message
   const mailOptions = {
