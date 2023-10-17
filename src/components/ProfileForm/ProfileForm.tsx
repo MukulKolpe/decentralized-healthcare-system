@@ -38,9 +38,9 @@ import {
 import doctorsideabi from "../../utils/doctorsideabi.json";
 
 export default function ProfileForm() {
-  const [diabetes, setDiabetes] = useState(true);
-  const [disablilities, setDisabilities] = useState(true);
-  const [highbp, setHighbp] = useState(true);
+  const [diabetes, setDiabetes] = useState(false);
+  const [disablilities, setDisabilities] = useState(false);
+  const [highbp, setHighbp] = useState(false);
   const inputRef = useRef(null);
   const toast = useToast();
   const [recordImage, setRecordImage] = useState();
@@ -140,14 +140,14 @@ export default function ProfileForm() {
         as="form"
       >
         <Heading w="100%" textAlign={"center"} fontWeight="normal">
-          Medical History
+          Update Medical History
         </Heading>
         <Flex>
           <FormControl mr="5%" mt="4%">
             <FormLabel htmlFor="diabetes" fontWeight={"normal"}>
               Are you diagnosed with diabetes ?
             </FormLabel>
-            <RadioGroup defaultValue="2">
+            <RadioGroup defaultValue="1">
               <Stack spacing={5} direction="row">
                 <Radio
                   colorScheme="red"
@@ -172,7 +172,7 @@ export default function ProfileForm() {
             <FormLabel htmlFor="disablilities" fontWeight={"normal"}>
               Do you have any disablilities ?
             </FormLabel>
-            <RadioGroup defaultValue="2">
+            <RadioGroup defaultValue="1">
               <Stack spacing={5} direction="row">
                 <Radio
                   colorScheme="red"
@@ -197,7 +197,7 @@ export default function ProfileForm() {
             <FormLabel htmlFor="bp" fontWeight={"normal"}>
               Are you diagnosed with high blood pressure ?
             </FormLabel>
-            <RadioGroup defaultValue="2">
+            <RadioGroup defaultValue="1">
               <Stack spacing={5} direction="row">
                 <Radio
                   colorScheme="red"

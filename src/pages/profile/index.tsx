@@ -28,6 +28,7 @@ export default function Profile() {
   const [history, setHistory] = useState([]);
   const [click, setClick] = useState(false);
   const [docs, setDocs] = useState([]);
+  const [role, setRole] = useState(0);
   const [userid, setUserid] = useState();
   useEffect(() => {
     if (window.ethereum._state.accounts.length !== 0) {
@@ -41,12 +42,21 @@ export default function Profile() {
       const accounts = provider.listAccounts();
       accounts.then((account) => {
         const res = contract.userWalletAddresstoUserId(account[0]);
+
         let length;
         let userId;
         res.then((id) => {
           userId = id.toNumber();
+
           setUserid(userId);
+          const role = contract.userIdtoUser(userId);
+          role.then((res) => {
+            let numRole = res.userRole.toNumber();
+            setRole(numRole);
+          });
+
           const history = contract.userIdtoPatientHistory(id.toNumber());
+
           let checkId;
           history.then((res) => {
             setHistory(res);
@@ -56,7 +66,7 @@ export default function Profile() {
         });
       });
     }
-  }, [userid]);
+  }, []);
 
   const getAllDocs = () => {
     if (window.ethereum._state.accounts.length !== 0) {
@@ -68,6 +78,9 @@ export default function Profile() {
         signer
       );
       const accounts = provider.listAccounts();
+      const res = contract.userWalletAddresstoUserId(
+        "0xa83A121E9957d69Fd24b133b280eBD4823380dBF"
+      );
 
       const length = contract.getMapping4length(userid);
       length.then((res) => {
@@ -86,7 +99,7 @@ export default function Profile() {
 
   return (
     <div>
-      {userid !== 3 ? (
+      {role !== 3 ? (
         <>
           <Box textAlign="center" py={10} px={6} mt={4}>
             <WarningTwoIcon boxSize={"50px"} color={"orange.300"} />
@@ -101,13 +114,20 @@ export default function Profile() {
       ) : (
         <>
           <ProfileForm />
-          {click ? null : (
-            <Center mt="10%">
-              <Button onClick={getAllDocs}> View All Reports </Button>
+          {click ? (
+            <Center>
+              <Heading mt="2%"> All Medical Documents </Heading>
+            </Center>
+          ) : (
+            <Center>
+              <Button my="3%" xl onClick={getAllDocs}>
+                View All Reports{" "}
+              </Button>
             </Center>
           )}
+
           {docs.map((item) => (
-            <Card mr="7%" ml="7%" mt="3%">
+            <Card maxWidth={800} p={6} m="10px auto" mt="3%">
               <CardHeader>
                 <Heading size="md"> {item[1]}</Heading>
               </CardHeader>
