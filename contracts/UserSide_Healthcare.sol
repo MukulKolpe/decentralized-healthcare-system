@@ -48,6 +48,12 @@ contract UserSide_Healthcare{
             User memory u1 = User(totalUsers,_userName,_userAadhar,_userLicenseNo,_userAge,_userEmail,_userSpeciality,_userProfileImg,_userMedicalDegree,_userRole,msg.sender,false);
             userIdtoUser[totalUsers] = u1;
             takeUserHistory(totalUsers, false, false, false, 0);
+            require(userWalletAddresstoUserId[u1.userWalletAddress] == 0 && userEmailtoUserId[u1.userEmail] == 0,"User with this wallet address or email already exists");
+            userIdtoUser[totalUsers].isVerified = true;
+            userWalletAddresstoUserId[u1.userWalletAddress] = u1.userId;
+            userEmailtoUserId[u1.userEmail] = u1.userId;
+            userIdtoBlacklist[totalUsers] = false;
+            userIdtoReportUser[totalUsers] = 0;
             totalUsers++;
         }
         else{
@@ -71,7 +77,7 @@ contract UserSide_Healthcare{
     function approveUser(uint256 _userId) public {
         require(msg.sender == admin,"Only Admin can call this function");
         User memory u1 = userIdtoUser[_userId];
-        require(userWalletAddresstoUserId[u1.userWalletAddress] == 0 || userEmailtoUserId[u1.userEmail] == 0,"User with this wallet address or email already exists");
+        require(userWalletAddresstoUserId[u1.userWalletAddress] == 0 && userEmailtoUserId[u1.userEmail] == 0,"User with this wallet address or email already exists");
         userIdtoUser[_userId].isVerified = true;
         userWalletAddresstoUserId[u1.userWalletAddress] = u1.userId;
         userEmailtoUserId[u1.userEmail] = u1.userId;

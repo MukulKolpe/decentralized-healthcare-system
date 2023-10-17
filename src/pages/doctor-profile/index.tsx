@@ -721,19 +721,15 @@ const index = () => {
           gap={{ base: "8", sm: "12", md: "16" }}
         >
           {timeSlots &&
-            timeSlots.map((ts) => (
-              <GridItem>
-                {ts.isBooked ? (
-                  <Button isDisabled colorScheme="teal" variant="solid">
-                    {ts.startTime} - {ts.endTime}
-                  </Button>
-                ) : (
+            timeSlots
+              .filter((ts) => ts.isBooked == false)
+              .map((ts) => (
+                <GridItem>
                   <Button colorScheme="teal" variant="solid">
                     {ts.startTime} - {ts.endTime}
                   </Button>
-                )}
-              </GridItem>
-            ))}
+                </GridItem>
+              ))}
         </Grid>
         <Divider mt={12} mb={12} />
         <Grid
