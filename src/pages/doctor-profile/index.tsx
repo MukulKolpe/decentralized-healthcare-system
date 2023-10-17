@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { HuddleIframe } from "@huddle01/iframe";
 import axios from "axios";
-
+import { Textarea } from "@chakra-ui/react";
 import { ethers } from "ethers";
 import { ParticleProvider } from "@particle-network/provider";
 import doctorsideabi from "../../utils/doctorsideabi.json";
@@ -419,6 +419,8 @@ const index = () => {
     );
   }
 
+  console.log(appointments);
+
   return (
     <div>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -529,7 +531,7 @@ const index = () => {
                         },
                       }}
                     >
-                      <span>Upload Report</span>
+                      <span>Upload Prescription</span>
                       <VisuallyHidden>
                         <input
                           id="file-upload"
@@ -771,12 +773,12 @@ const index = () => {
                       <Th>App Id.</Th>
                       <Th>Patient Name</Th>
                       <Th>Patient Age</Th>
+                      <Th>App Subject</Th>
                       <Th>App date</Th>
                       <Th>App Time</Th>
                       <Th>App Status</Th>
                       <Th>Upload User Report</Th>
                       <Th>Generate Meeting</Th>
-                      <Th>Meeting Link</Th>
                     </Tr>
                   </Thead>
                   <Tbody>
@@ -785,6 +787,15 @@ const index = () => {
                         <Td isNumeric>{Number(appoint.appPayload.appId)}</Td>
                         <Td>{appoint.patPayload.userName}</Td>
                         <Td>{Number(appoint.patPayload.userAge)} years</Td>
+                        <Td>
+                          <Textarea
+                            width="300px"
+                            rows={3} // Set the number of rows (height)
+                            // Set the number of columns (width)
+                            resize="none" // Prevent resizing
+                            value={appoint.appPayload[4]}
+                          />
+                        </Td>
                         <Td>{appoint.appPayload.appDate}</Td>
                         <Td>
                           {appoint.appPayload.startTime} -{" "}
@@ -828,7 +839,6 @@ const index = () => {
                             Generate Link
                           </Button>
                         </Td>
-                        <Td>{meetLink}</Td>
                       </Tr>
                     ))}
                   </Tbody>
