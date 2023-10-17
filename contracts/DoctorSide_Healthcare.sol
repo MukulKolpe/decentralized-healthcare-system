@@ -1,6 +1,6 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.18;
-import "contracts/UserSide_Healthcare.sol";
+import "./UserSide_Healthcare.sol";
 
 contract DoctorSide_Healthcare is UserSide_Healthcare{
     uint256 public totalAppointments = 1;
@@ -17,6 +17,7 @@ contract DoctorSide_Healthcare is UserSide_Healthcare{
         address doctorWalletAddress;
         bool isApproved;
         uint256 slotId;
+        uint256 appType;
     }
 
     struct AppointmentTimeSlot{
@@ -66,7 +67,7 @@ contract DoctorSide_Healthcare is UserSide_Healthcare{
     }
 
     function bookAppointment(string memory _appDate,string memory _startTime,string memory _endTime,string memory _appSubject,string memory _appFeedback,address _doctorWalletAddress,uint256 _slotId) public {
-        Appointment memory a1 = Appointment(totalAppointments,_appDate,_startTime,_endTime,_appSubject,_appFeedback,msg.sender,_doctorWalletAddress,false,_slotId);
+        Appointment memory a1 = Appointment(totalAppointments,_appDate,_startTime,_endTime,_appSubject,_appFeedback,msg.sender,_doctorWalletAddress,false,_slotId,0);
         appointmentIdtoAppointment[totalAppointments] = a1;
         uint256 patId = userWalletAddresstoUserId[msg.sender];
         uint256 doctorId = userWalletAddresstoUserId[_doctorWalletAddress];
@@ -76,6 +77,21 @@ contract DoctorSide_Healthcare is UserSide_Healthcare{
         patIdtoAppointmentId[patId].push(totalAppointments);
         totalAppointments++;
     }
+
+    function bookAppointmentEmergency(string memory _appDate,string memory _startTime,string memory _endTime,string memory _appSubject,string memory _appFeedback,address _doctorWalletAddress,uint256 _slotId) public payable{
+        uint256 stakeAmount = 1 * 10**14;
+        require(msg.value >= stakeAmount,"You need to stake more amount in order to book emergency appointment");
+        Appointment memory a1 = Appointment(totalAppointments,_appDate,_startTime,_endTime,_appSubject,_appFeedback,msg.sender,_doctorWalletAddress,false,_slotId,1);
+        appointmentIdtoAppointment[totalAppointments] = a1;
+        uint256 patId = userWalletAddresstoUserId[msg.sender];
+        uint256 doctorId = userWalletAddresstoUserId[_doctorWalletAddress];
+        require(patId != 0 && doctorId != 0,"Patient wallet address and wallet address must be both registered into the system");
+        require(!userIdtoBlacklist[patId] && !userIdtoBlacklist[doctorId],"Either patient or doctor are blacklisted");
+        docIdtoAppointmentId[doctorId].push(totalAppointments);
+        patIdtoAppointmentId[patId].push(totalAppointments);
+        totalAppointments++;
+    }
+
 
     function approveAppointment(uint256 _appId) public {
         uint256 doctorId = userWalletAddresstoUserId[appointmentIdtoAppointment[_appId].doctorWalletAddress];

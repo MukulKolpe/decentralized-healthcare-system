@@ -8,6 +8,7 @@ contract UserSide_Healthcare{
     // 2: Doctor
     // 3: Patient
     // 4: Other Hospital Employees
+    // 5: Lab Employees
 
     uint256 public totalUsers = 1;
     struct User{
@@ -39,6 +40,7 @@ contract UserSide_Healthcare{
     mapping(uint256 => uint256) public userIdtoReportUser;
     mapping(uint256 => PatientHistory) public userIdtoPatientHistory;
     mapping(uint256 => string[]) public userIdtoPrevMedicalHistory; // mapping 6
+    mapping(string => uint256) public userEmailtoUserId;
     address admin;
 
     function createUser(string memory _userName,string memory _userAadhar,string memory _userLicenseNo,uint256 _userAge,string memory _userEmail,string memory _userSpeciality,string memory _userProfileImg,string memory _userMedicalDegree,uint256 _userRole) public {
@@ -59,9 +61,10 @@ contract UserSide_Healthcare{
     function approveUser(uint256 _userId) public {
         require(msg.sender == admin,"Only Admin can call this function");
         User memory u1 = userIdtoUser[_userId];
-        require(userWalletAddresstoUserId[u1.userWalletAddress] == 0,"User with this wallet address already exists");
+        require(userWalletAddresstoUserId[u1.userWalletAddress] == 0 || userEmailtoUserId[u1.userEmail] == 0,"User with this wallet address or email already exists");
         userIdtoUser[_userId].isVerified = true;
         userWalletAddresstoUserId[u1.userWalletAddress] = u1.userId;
+        userEmailtoUserId[u1.userEmail] = u1.userId;
         userIdtoBlacklist[_userId] = false;
         userIdtoReportUser[_userId] = 0;
     }
