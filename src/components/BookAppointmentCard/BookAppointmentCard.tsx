@@ -18,6 +18,7 @@ import {
   Grid,
   GridItem,
   Tooltip,
+  VStack,
 } from "@chakra-ui/react";
 import {
   Modal,
@@ -198,6 +199,58 @@ const BookAppointmentCard = ({ sysUser, signal }) => {
     setSize(newSize);
 
     onOpen();
+  };
+
+  const BookEmergencyAppointment = async () => {
+    if (window.ethereum._state.accounts.length !== 0) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(
+        process.env.NEXT_PUBLIC_DOCTORSIDE_ADDRESS,
+        documentabi,
+        signer
+      );
+      console.log(contract);
+      const accounts = await provider.listAccounts();
+      setUserWalletAddress(accounts[0]);
+      const balance = await provider.getBalance(accounts[0]);
+      console.log("balance is: " + balance);
+      if (balance > 1 * 10 ** 14) {
+        console.log("f this");
+        const userId = await contract.userWalletAddresstoUserId(accounts[0]);
+        const userInfo = await contract.userIdtoUser(userId);
+        setDoctorInfo(userInfo);
+
+        const tx = await contract.bookAppointmentEmergency(
+          date,
+          startTime,
+          endTime,
+          subject,
+          "",
+          sysUser[10],
+          selectedSlotID
+          ,{value: ethers.utils.parseEther("0.0005")}
+        );
+        toast({
+          title: "Appoinment Request Sent!",
+          description: "Please wait for the transaction to complete.",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        });
+        await tx.wait();
+        router.refresh();
+      } else {
+        toast({
+          title: "You do not have enough Ethers!",
+          description:
+            "You need have atleast 0.0005 ETH to book emergency appointment.",
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+        });
+      }
+    }
   };
 
   const BookAppointment = async () => {
@@ -396,7 +449,7 @@ const BookAppointmentCard = ({ sysUser, signal }) => {
                 </ModalBody>
 
                 <ModalFooter>
-                  <Flex>
+                  <VStack>
                     <Button
                       onClick={BookAppointment}
                       _hover={{
@@ -408,9 +461,23 @@ const BookAppointmentCard = ({ sysUser, signal }) => {
                         marginLeft: "auto",
                       }}
                     >
-                      Confirm Appointment
+                      Book Appointment
                     </Button>
-                  </Flex>
+                    <Button
+                      onClick={BookEmergencyAppointment}
+                      _hover={{
+                        transform: "translateY(-2px)",
+                        boxShadow: "lg",
+                      }}
+                      style={{
+                        // align item to the right
+                        marginLeft: "auto",
+                      }}
+                      mt={2}
+                    >
+                      Book Emergency Appointment
+                    </Button>
+                  </VStack>
                 </ModalFooter>
               </ModalContent>
             </Modal>
