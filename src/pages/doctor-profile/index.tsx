@@ -804,7 +804,20 @@ const index = () => {
                           </Td>
                         )}
                         <Td>
-                          <Button onClick={getLink}>Generate Link</Button>
+                          <Button
+                            onClick={() => {
+                              setModalPatientName(appoint.patPayload.userName);
+                              setModalAppointmentDateTime(
+                                `${appoint.appPayload.appDate} (${appoint.appPayload.startTime} - ${appoint.appPayload.endTime})`
+                              );
+                              setModalPatientWallet(
+                                appoint.patPayload.userWalletAddress
+                              );
+                              onOpen();
+                            }}
+                          >
+                            Upload Prescription
+                          </Button>
                         </Td>
                         <Td>
                           <Button
