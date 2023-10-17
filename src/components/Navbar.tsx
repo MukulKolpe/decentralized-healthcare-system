@@ -13,15 +13,63 @@ import {
   useColorModeValue,
   Stack,
   Icon,
+  Heading,
 } from "@chakra-ui/react";
-import { HamburgerIcon, CloseIcon, AddIcon } from "@chakra-ui/icons";
+import React, { useEffect, useState } from "react";
+import {
+  HamburgerIcon,
+  CloseIcon,
+  AddIcon,
+  WarningTwoIcon,
+} from "@chakra-ui/icons";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-
+import { ethers } from "ethers";
+import doctorsideabi from "../utils/doctorsideabi.json";
 import { Link } from "@chakra-ui/next-js";
 
 export default function Navbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const [role, setRole] = useState(-1);
+  const [userid, setUserid] = useState();
+  const [address, setAddress] = useState("");
+
+  useEffect(() => {
+    if (window.ethereum._state.accounts.length !== 0) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(
+        process.env.NEXT_PUBLIC_DOCTORSIDE_ADDRESS,
+        doctorsideabi,
+        signer
+      );
+      const accounts = provider.listAccounts();
+
+      accounts.then((account) => {
+        const res = contract.userWalletAddresstoUserId(account[0]);
+        setAddress(account[0]);
+        console.log("Address:", account[0]);
+        let length;
+        let userId;
+        res.then((id) => {
+          userId = id.toNumber();
+
+          setUserid(userId);
+          const role = contract.userIdtoUser(userId);
+          role.then((res) => {
+            let numRole = res.userRole.toNumber();
+            setRole(numRole);
+            console.log("Role:", numRole);
+          });
+        });
+      });
+    }
+  }, [address, role, userid]);
+  useEffect(() => {
+    window.ethereum.on("accountsChanged", function () {
+      window.location.reload();
+    });
+  }, [address, role]);
   return (
     <>
       <Box bg={useColorModeValue("white", "gray.800")} px={10}>
@@ -50,60 +98,100 @@ export default function Navbar() {
           </HStack>
           <Flex alignItems={"center"}>
             <div style={{ display: "flex" }}>
-              <HStack
-                as={"nav"}
-                spacing={4}
-                display={{ base: "none", md: "flex" }}
-                marginRight={4}
-              >
-                <Link href="/user-registration">
-                  <Button w="full" variant="ghost">
-                    User Registration
-                  </Button>
-                </Link>
+              {address !== "" ? (
+                <>
+                  {role === 0 ? (
+                    <HStack
+                      as={"nav"}
+                      spacing={4}
+                      display={{ base: "none", md: "flex" }}
+                      marginRight={4}
+                    >
+                      <Link href="/user-registration">
+                        <Button w="full" variant="ghost">
+                          User Registration
+                        </Button>
+                      </Link>
+                    </HStack>
+                  ) : null}
+                  {role === 0 ? (
+                    <HStack
+                      as={"nav"}
+                      spacing={4}
+                      display={{ base: "none", md: "flex" }}
+                      marginRight={4}
+                    >
+                      <Link href="/doctor-registration">
+                        <Button w="full" variant="ghost">
+                          Doctor Registration
+                        </Button>
+                      </Link>
+                    </HStack>
+                  ) : null}
+                  {role === 1 ? (
+                    <HStack
+                      as={"nav"}
+                      spacing={4}
+                      display={{ base: "none", md: "flex" }}
+                      marginRight={4}
+                    >
+                      <Link href="/admin">
+                        <Button w="full" variant="ghost">
+                          Admin
+                        </Button>
+                      </Link>
+                    </HStack>
+                  ) : null}
+
+                  {role === 2 ? (
+                    <HStack
+                      as={"nav"}
+                      spacing={4}
+                      display={{ base: "none", md: "flex" }}
+                      marginRight={4}
+                    >
+                      <Link href="/doctor-profile">
+                        <Button w="full" variant="ghost">
+                          Doctor Profile
+                        </Button>
+                      </Link>
+                    </HStack>
+                  ) : null}
+
+                  {role === 3 ? (
+                    <HStack
+                      as={"nav"}
+                      spacing={4}
+                      display={{ base: "none", md: "flex" }}
+                      marginRight={4}
+                    >
+                      <Link href="/book">
+                        <Button w="full" variant="ghost">
+                          Book Appointment
+                        </Button>
+                      </Link>
+                    </HStack>
+                  ) : null}
+                  {role === 3 ? (
+                    <HStack
+                      as={"nav"}
+                      spacing={4}
+                      display={{ base: "none", md: "flex" }}
+                      marginRight={4}
+                    >
+                      <Link href="/profile">
+                        <Button w="full" variant="ghost">
+                          Profile
+                        </Button>
+                      </Link>
+                    </HStack>
+                  ) : null}
+                </>
+              ) : null}
+
+              <HStack>
+                <ConnectButton />
               </HStack>
-              <HStack
-                as={"nav"}
-                spacing={4}
-                display={{ base: "none", md: "flex" }}
-                marginRight={4}
-              >
-                <Link href="/doctor-registration">
-                  <Button w="full" variant="ghost">
-                    Doctor Registration
-                  </Button>
-                </Link>
-              </HStack>
-              <HStack
-                as={"nav"}
-                spacing={4}
-                display={{ base: "none", md: "flex" }}
-                marginRight={4}
-              >
-                <Link href="/book">
-                  <Button w="full" variant="ghost">
-                    Book Appointment
-                  </Button>
-                </Link>
-              </HStack>
-              <HStack
-                as={"nav"}
-                spacing={4}
-                display={{ base: "none", md: "flex" }}
-                marginRight={4}
-              >
-                <Link href="/admin">
-                  <Button w="full" variant="ghost">
-                    Admin
-                  </Button>
-                </Link>
-                <Link href="/profile">
-                  <Button w="full" variant="ghost">
-                    Profile
-                  </Button>
-                </Link>
-              </HStack>
-              <ConnectButton />
             </div>
           </Flex>
         </Flex>
