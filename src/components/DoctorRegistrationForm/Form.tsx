@@ -113,23 +113,7 @@ const Form1 = ({ getName, getAge, getProfile }) => {
           onChange={(e) => handleName(e.target.value)}
         />
       </FormControl>
-      <FormControl mr="5%" mt="2%">
-        <FormLabel htmlFor="age" fontWeight={"normal"}>
-          Age
-        </FormLabel>
-        <NumberInput
-          step={1}
-          defaultValue={18}
-          min={1}
-          onChange={(value) => handleAge(value)}
-        >
-          <NumberInputField />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
-        </NumberInput>
-      </FormControl>
+
       <SimpleGrid>
         <FormControl mt="2%">
           <FormLabel
@@ -231,6 +215,23 @@ const Form1 = ({ getName, getAge, getProfile }) => {
           Upload to IPFS
         </Button>
       </SimpleGrid>
+      <FormControl mr="5%" mt="2%">
+        <FormLabel htmlFor="age" fontWeight={"normal"}>
+          Years of Experience
+        </FormLabel>
+        <NumberInput
+          step={1}
+          defaultValue={5}
+          min={1}
+          onChange={(value) => handleAge(value)}
+        >
+          <NumberInputField />
+          <NumberInputStepper>
+            <NumberIncrementStepper />
+            <NumberDecrementStepper />
+          </NumberInputStepper>
+        </NumberInput>
+      </FormControl>
     </>
   );
 };
