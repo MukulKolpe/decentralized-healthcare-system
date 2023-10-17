@@ -89,7 +89,6 @@ const index = () => {
   const [aptDate, setAptDate] = useState("");
   const [aptstartTime, setaptStartTime] = useState("");
   const [aptendTime, setaptEndTime] = useState("");
-
   const [modalPatientName, setModalPatientName] = useState("");
   const [modalAppointmentDateTime, setModalAppointmentDateTime] = useState("");
   const [modalPatientWallet, setModalPatientWallet] = useState("");
@@ -181,7 +180,7 @@ const index = () => {
       setUserWalletAddress(accounts[0]);
       const userId = await contract.userWalletAddresstoUserId(accounts[0]);
       const userInfo = await contract.userIdtoUser(userId);
-      setDoctorInfo(userInfo);
+
       if (Number(userInfo.userRole) === 2) {
         setLoading(false);
         setAccess(true);
@@ -202,7 +201,6 @@ const index = () => {
             tempAppointment.patientWalletAddress
           );
           appPat = await contract.userIdtoUser(appPatId);
-          setClientMail(appPat[5]);
 
           setAppointments((prevState) => [
             ...prevState,
@@ -275,7 +273,7 @@ const index = () => {
     }
   };
 
-  const getLink = async () => {
+  const getLink = async (ptemail) => {
     const response = await axios.post(
       "https://api.huddle01.com/api/v1/create-iframe-room",
       {
@@ -294,9 +292,11 @@ const index = () => {
     console.log(meet1);
     console.log(aptstartTime);
     console.log(aptendTime);
+    console.log(ptemail);
+    console.log(doctorInfo.userEmail);
 
     const data = {
-      email: clientMail,
+      email: ptemail,
       link: meet1,
       date: aptDate,
       startTime: aptstartTime,
@@ -326,7 +326,7 @@ const index = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(data2),
     })
       .then((response) => response.json())
       .then((data) => console.log(data))
@@ -804,14 +804,16 @@ const index = () => {
                           </Td>
                         )}
                         <Td>
+                          <Button onClick={getLink}>Generate Link</Button>
+                        </Td>
+                        <Td>
                           <Button
-                            onClick={getLink}
+                            onClick={() => {
+                              getLink(appoint.patPayload[5]);
+                            }}
                           >
                             Generate Link
                           </Button>
-                        </Td>
-                        <Td>
-                          <Button onClick={getLink}>Generate Link</Button>
                         </Td>
                         <Td>{meetLink}</Td>
                       </Tr>
