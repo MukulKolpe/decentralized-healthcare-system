@@ -102,6 +102,11 @@
 				"internalType": "uint256",
 				"name": "slotId",
 				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "appType",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -213,6 +218,49 @@
 		"name": "bookAppointment",
 		"outputs": [],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_appDate",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_startTime",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_endTime",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_appSubject",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_appFeedback",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "_doctorWalletAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_slotId",
+				"type": "uint256"
+			}
+		],
+		"name": "bookAppointmentEmergency",
+		"outputs": [],
+		"stateMutability": "payable",
 		"type": "function"
 	},
 	{
@@ -751,6 +799,25 @@
 		"name": "uploadMedicalReprt",
 		"outputs": [],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"name": "userEmailtoUserId",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{

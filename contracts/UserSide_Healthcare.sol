@@ -44,9 +44,19 @@ contract UserSide_Healthcare{
     address admin;
 
     function createUser(string memory _userName,string memory _userAadhar,string memory _userLicenseNo,uint256 _userAge,string memory _userEmail,string memory _userSpeciality,string memory _userProfileImg,string memory _userMedicalDegree,uint256 _userRole) public {
-        User memory u1 = User(totalUsers,_userName,_userAadhar,_userLicenseNo,_userAge,_userEmail,_userSpeciality,_userProfileImg,_userMedicalDegree,_userRole,msg.sender,false);
-        userIdtoUser[totalUsers] = u1;
-        totalUsers++;
+        if(_userRole == 3){
+            User memory u1 = User(totalUsers,_userName,_userAadhar,_userLicenseNo,_userAge,_userEmail,_userSpeciality,_userProfileImg,_userMedicalDegree,_userRole,msg.sender,false);
+            userIdtoUser[totalUsers] = u1;
+            takeUserHistory(totalUsers, false, false, false, 0);
+            totalUsers++;
+        }
+        else{
+            User memory u1 = User(totalUsers,_userName,_userAadhar,_userLicenseNo,_userAge,_userEmail,_userSpeciality,_userProfileImg,_userMedicalDegree,_userRole,msg.sender,false);
+            userIdtoUser[totalUsers] = u1;
+            takeUserHistory(totalUsers, false, false, false, 0);
+            totalUsers++;
+        }
+        
     }
 
     function takeUserHistory (uint256 _userId,bool _isHandicap,bool _isBp,bool _isDiabetes,uint256 _userExp) public{
