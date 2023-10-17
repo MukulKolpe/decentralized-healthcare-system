@@ -20,6 +20,7 @@ import {
   ExternalLinkIcon,
   Stack,
 } from "@chakra-ui/react";
+import { WarningTwoIcon } from "@chakra-ui/icons";
 
 export default function Profile() {
   const [prevRec, setPrevRec] = useState();
@@ -85,10 +86,21 @@ export default function Profile() {
 
   return (
     <div>
-      {userid === 0 ? (
-        <ProfileForm />
+      {userid !== 3 ? (
+        <>
+          <Box textAlign="center" py={10} px={6} mt={4}>
+            <WarningTwoIcon boxSize={"50px"} color={"orange.300"} />
+            <Heading as="h2" size="xl" mt={6} mb={2}>
+              Only Registered user can see this page
+            </Heading>
+            <Text color={"gray.500"}>
+              Please Login through registered user wallet address
+            </Text>
+          </Box>
+        </>
       ) : (
         <>
+          <ProfileForm />
           {click ? null : (
             <Center mt="10%">
               <Button onClick={getAllDocs}> View All Reports </Button>
