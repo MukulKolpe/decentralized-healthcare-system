@@ -228,8 +228,8 @@ const BookAppointmentCard = ({ sysUser, signal }) => {
           subject,
           "",
           sysUser[10],
-          selectedSlotID
-          ,{value: ethers.utils.parseEther("0.0005")}
+          selectedSlotID,
+          { value: ethers.utils.parseEther("0.0005") }
         );
         toast({
           title: "Appoinment Request Sent!",
@@ -341,7 +341,7 @@ const BookAppointmentCard = ({ sysUser, signal }) => {
                 ) : null}
               </Stack>
               <Stack spacing={0} align={"center"}>
-                <Text fontWeight={600}>Age: {age}</Text>
+                <Text fontWeight={600}>Experience (in years): {age}</Text>
               </Stack>
             </Stack>
 

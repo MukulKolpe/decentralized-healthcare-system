@@ -144,7 +144,7 @@ const CardComponent = ({ sysUser, signal }) => {
                 ) : null}
               </Stack>
               <Stack spacing={0} align={"center"}>
-                <Text fontWeight={600}>Age: {age}</Text>
+                <Text fontWeight={600}>Experience (in years): {age}</Text>
               </Stack>
             </Stack>
 
