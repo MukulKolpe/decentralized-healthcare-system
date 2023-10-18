@@ -45,6 +45,11 @@ import {
   VisuallyHidden,
   Stack,
   Icon,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
 } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
@@ -761,85 +766,290 @@ const index = () => {
         >
           <GridItem colSpan={3}>
             {appSignal ? (
-              <TableContainer>
-                <Table variant="simple">
-                  <TableCaption>All Appointments</TableCaption>
-                  <Thead>
-                    <Tr>
-                      <Th>App Id.</Th>
-                      <Th>Patient Name</Th>
-                      <Th>Patient Age</Th>
-                      <Th>App Subject</Th>
-                      <Th>App date</Th>
-                      <Th>App Time</Th>
-                      <Th>App Status</Th>
-                      <Th>Upload User Report</Th>
-                      <Th>Generate Meeting</Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {appointments.map((appoint) => (
-                      <Tr>
-                        <Td isNumeric>{Number(appoint.appPayload.appId)}</Td>
-                        <Td>{appoint.patPayload.userName}</Td>
-                        <Td>{Number(appoint.patPayload.userAge)} years</Td>
-                        <Td>
-                          <Textarea
-                            width="300px"
-                            rows={3} // Set the number of rows (height)
-                            // Set the number of columns (width)
-                            resize="none" // Prevent resizing
-                            value={appoint.appPayload[4]}
-                          />
-                        </Td>
-                        <Td>{appoint.appPayload.appDate}</Td>
-                        <Td>
-                          {appoint.appPayload.startTime} -{" "}
-                          {appoint.appPayload.endTime}
-                        </Td>
-                        {appoint.appPayload.isApproved ? (
-                          <Td>Approved</Td>
-                        ) : (
-                          <Td>
-                            <Button
-                              onClick={() => {
-                                approveAppointment(appoint.appPayload.appId);
-                              }}
-                            >
-                              Approve
-                            </Button>
-                          </Td>
-                        )}
-                        <Td>
-                          <Button
-                            onClick={() => {
-                              setModalPatientName(appoint.patPayload.userName);
-                              setModalAppointmentDateTime(
-                                `${appoint.appPayload.appDate} (${appoint.appPayload.startTime} - ${appoint.appPayload.endTime})`
-                              );
-                              setModalPatientWallet(
-                                appoint.patPayload.userWalletAddress
-                              );
-                              onOpen();
-                            }}
-                          >
-                            Upload Prescription
-                          </Button>
-                        </Td>
-                        <Td>
-                          <Button
-                            onClick={() => {
-                              getLink(appoint.patPayload[5]);
-                            }}
-                          >
-                            Generate Link
-                          </Button>
-                        </Td>
-                      </Tr>
-                    ))}
-                  </Tbody>
-                </Table>
-              </TableContainer>
+              <Tabs>
+                <TabList>
+                  <Tab>All</Tab>
+                  <Tab>Normal</Tab>
+                  <Tab>Emergency</Tab>
+                </TabList>
+                <TabPanels>
+                  <TabPanel>
+                    <TableContainer>
+                      <Table variant="simple">
+                        <TableCaption>All Appointments</TableCaption>
+                        <Thead>
+                          <Tr>
+                            <Th>App Id.</Th>
+                            <Th>Patient Name</Th>
+                            <Th>Patient Age</Th>
+                            <Th>App Subject</Th>
+                            <Th>App date</Th>
+                            <Th>App Time</Th>
+                            <Th>App Status</Th>
+                            <Th>Upload User Report</Th>
+                            <Th>Generate Meeting</Th>
+                          </Tr>
+                        </Thead>
+                        <Tbody>
+                          {appointments.map((appoint) => (
+                            <Tr>
+                              <Td isNumeric>
+                                {Number(appoint.appPayload.appId)}
+                              </Td>
+                              <Td>{appoint.patPayload.userName}</Td>
+                              <Td>
+                                {Number(appoint.patPayload.userAge)} years
+                              </Td>
+                              <Td>
+                                <Textarea
+                                  width="300px"
+                                  rows={3} // Set the number of rows (height)
+                                  // Set the number of columns (width)
+                                  resize="none" // Prevent resizing
+                                  value={appoint.appPayload[4]}
+                                />
+                              </Td>
+                              <Td>{appoint.appPayload.appDate}</Td>
+                              <Td>
+                                {appoint.appPayload.startTime} -{" "}
+                                {appoint.appPayload.endTime}
+                              </Td>
+                              {appoint.appPayload.isApproved ? (
+                                <Td>Approved</Td>
+                              ) : (
+                                <Td>
+                                  <Button
+                                    onClick={() => {
+                                      approveAppointment(
+                                        appoint.appPayload.appId
+                                      );
+                                    }}
+                                  >
+                                    Approve
+                                  </Button>
+                                </Td>
+                              )}
+                              <Td>
+                                <Button
+                                  onClick={() => {
+                                    setModalPatientName(
+                                      appoint.patPayload.userName
+                                    );
+                                    setModalAppointmentDateTime(
+                                      `${appoint.appPayload.appDate} (${appoint.appPayload.startTime} - ${appoint.appPayload.endTime})`
+                                    );
+                                    setModalPatientWallet(
+                                      appoint.patPayload.userWalletAddress
+                                    );
+                                    onOpen();
+                                  }}
+                                >
+                                  Upload Prescription
+                                </Button>
+                              </Td>
+                              <Td>
+                                <Button
+                                  onClick={() => {
+                                    getLink(appoint.patPayload[5]);
+                                  }}
+                                >
+                                  Generate Link
+                                </Button>
+                              </Td>
+                            </Tr>
+                          ))}
+                        </Tbody>
+                      </Table>
+                    </TableContainer>
+                  </TabPanel>
+                  <TabPanel>
+                    <TableContainer>
+                      <Table variant="simple">
+                        <TableCaption>All Appointments</TableCaption>
+                        <Thead>
+                          <Tr>
+                            <Th>App Id.</Th>
+                            <Th>Patient Name</Th>
+                            <Th>Patient Age</Th>
+                            <Th>App Subject</Th>
+                            <Th>App date</Th>
+                            <Th>App Time</Th>
+                            <Th>App Status</Th>
+                            <Th>Upload User Report</Th>
+                            <Th>Generate Meeting</Th>
+                          </Tr>
+                        </Thead>
+                        <Tbody>
+                          {appointments
+                            .filter(
+                              (appoint) => appoint.appPayload.appType == 0
+                            )
+                            .map((appoint) => (
+                              <Tr>
+                                <Td isNumeric>
+                                  {Number(appoint.appPayload.appId)}
+                                </Td>
+                                <Td>{appoint.patPayload.userName}</Td>
+                                <Td>
+                                  {Number(appoint.patPayload.userAge)} years
+                                </Td>
+                                <Td>
+                                  <Textarea
+                                    width="300px"
+                                    rows={3} // Set the number of rows (height)
+                                    // Set the number of columns (width)
+                                    resize="none" // Prevent resizing
+                                    value={appoint.appPayload[4]}
+                                  />
+                                </Td>
+                                <Td>{appoint.appPayload.appDate}</Td>
+                                <Td>
+                                  {appoint.appPayload.startTime} -{" "}
+                                  {appoint.appPayload.endTime}
+                                </Td>
+                                {appoint.appPayload.isApproved ? (
+                                  <Td>Approved</Td>
+                                ) : (
+                                  <Td>
+                                    <Button
+                                      onClick={() => {
+                                        approveAppointment(
+                                          appoint.appPayload.appId
+                                        );
+                                      }}
+                                    >
+                                      Approve
+                                    </Button>
+                                  </Td>
+                                )}
+                                <Td>
+                                  <Button
+                                    onClick={() => {
+                                      setModalPatientName(
+                                        appoint.patPayload.userName
+                                      );
+                                      setModalAppointmentDateTime(
+                                        `${appoint.appPayload.appDate} (${appoint.appPayload.startTime} - ${appoint.appPayload.endTime})`
+                                      );
+                                      setModalPatientWallet(
+                                        appoint.patPayload.userWalletAddress
+                                      );
+                                      onOpen();
+                                    }}
+                                  >
+                                    Upload Prescription
+                                  </Button>
+                                </Td>
+                                <Td>
+                                  <Button
+                                    onClick={() => {
+                                      getLink(appoint.patPayload[5]);
+                                    }}
+                                  >
+                                    Generate Link
+                                  </Button>
+                                </Td>
+                              </Tr>
+                            ))}
+                        </Tbody>
+                      </Table>
+                    </TableContainer>
+                  </TabPanel>
+                  <TabPanel>
+                    <TableContainer>
+                      <Table variant="simple">
+                        <TableCaption>All Appointments</TableCaption>
+                        <Thead>
+                          <Tr>
+                            <Th>App Id.</Th>
+                            <Th>Patient Name</Th>
+                            <Th>Patient Age</Th>
+                            <Th>App Subject</Th>
+                            <Th>App date</Th>
+                            <Th>App Time</Th>
+                            <Th>App Status</Th>
+                            <Th>Upload User Report</Th>
+                            <Th>Generate Meeting</Th>
+                          </Tr>
+                        </Thead>
+                        <Tbody>
+                          {appointments
+                            .filter(
+                              (appoint) => appoint.appPayload.appType == 1
+                            )
+                            .map((appoint) => (
+                              <Tr>
+                                <Td isNumeric>
+                                  {Number(appoint.appPayload.appId)}
+                                </Td>
+                                <Td>{appoint.patPayload.userName}</Td>
+                                <Td>
+                                  {Number(appoint.patPayload.userAge)} years
+                                </Td>
+                                <Td>
+                                  <Textarea
+                                    width="300px"
+                                    rows={3} // Set the number of rows (height)
+                                    // Set the number of columns (width)
+                                    resize="none" // Prevent resizing
+                                    value={appoint.appPayload[4]}
+                                  />
+                                </Td>
+                                <Td>{appoint.appPayload.appDate}</Td>
+                                <Td>
+                                  {appoint.appPayload.startTime} -{" "}
+                                  {appoint.appPayload.endTime}
+                                </Td>
+                                {appoint.appPayload.isApproved ? (
+                                  <Td>Approved</Td>
+                                ) : (
+                                  <Td>
+                                    <Button
+                                      onClick={() => {
+                                        approveAppointment(
+                                          appoint.appPayload.appId
+                                        );
+                                      }}
+                                    >
+                                      Approve
+                                    </Button>
+                                  </Td>
+                                )}
+                                <Td>
+                                  <Button
+                                    onClick={() => {
+                                      setModalPatientName(
+                                        appoint.patPayload.userName
+                                      );
+                                      setModalAppointmentDateTime(
+                                        `${appoint.appPayload.appDate} (${appoint.appPayload.startTime} - ${appoint.appPayload.endTime})`
+                                      );
+                                      setModalPatientWallet(
+                                        appoint.patPayload.userWalletAddress
+                                      );
+                                      onOpen();
+                                    }}
+                                  >
+                                    Upload Prescription
+                                  </Button>
+                                </Td>
+                                <Td>
+                                  <Button
+                                    onClick={() => {
+                                      getLink(appoint.patPayload[5]);
+                                    }}
+                                  >
+                                    Generate Link
+                                  </Button>
+                                </Td>
+                              </Tr>
+                            ))}
+                        </Tbody>
+                      </Table>
+                    </TableContainer>
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
             ) : (
               <Button
                 onClick={() => {
