@@ -19,8 +19,33 @@ import {
   Link,
   ExternalLinkIcon,
   Stack,
+  Divider,
+  Grid,
+  GridItem,
+  VStack,
+  chakra,
+  Table,
+  Thead,
+  Tbody,
+  Tfoot,
+  Tr,
+  Th,
+  Td,
+  TableCaption,
+  TableContainer,
+  Container,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  Input,
 } from "@chakra-ui/react";
 import { WarningTwoIcon } from "@chakra-ui/icons";
+import { useRouter } from "next/navigation";
 
 export default function Profile() {
   const [prevRec, setPrevRec] = useState();
@@ -30,6 +55,13 @@ export default function Profile() {
   const [docs, setDocs] = useState([]);
   const [role, setRole] = useState(0);
   const [userid, setUserid] = useState();
+  const [userApp, serUserApp] = useState([]);
+  const [appButton, setAppButton] = useState(true);
+  const [patientData, setPatientData] = useState();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [modalAppId, setModalAppId] = useState(0);
+  const [modalFeedBack, setModalFeedback] = useState("");
+  const router = useRouter();
   useEffect(() => {
     if (window.ethereum._state.accounts.length !== 0) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -68,6 +100,39 @@ export default function Profile() {
     }
   }, []);
 
+  const getPatientAppointments = async () => {
+    if (window.ethereum._state.accounts.length !== 0) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(
+        process.env.NEXT_PUBLIC_DOCTORSIDE_ADDRESS,
+        doctorsideabi,
+        signer
+      );
+      const accounts = await provider.listAccounts();
+      const tempUserId = await contract.userWalletAddresstoUserId(accounts[0]);
+      const tempUserData = await contract.userIdtoUser(tempUserId);
+      console.log(tempUserData);
+      setPatientData(tempUserData);
+      const appLengths = await contract.getMapping2length(tempUserId);
+      let tempAppId, tempApp, tempDoc, tempDocId;
+      for (let i = 0; i < appLengths; i++) {
+        tempAppId = await contract.patIdtoAppointmentId(tempUserId, BigInt(i));
+        tempApp = await contract.appointmentIdtoAppointment(tempAppId);
+        tempDocId = await contract.userWalletAddresstoUserId(
+          tempApp.doctorWalletAddress
+        );
+        tempDoc = await contract.userIdtoUser(tempDocId);
+        console.log(tempApp);
+        serUserApp((prevState) => [
+          ...prevState,
+          { appData: tempApp, docData: tempDoc },
+        ]);
+      }
+      setAppButton(false);
+    }
+  };
+
   const getAllDocs = () => {
     if (window.ethereum._state.accounts.length !== 0) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -94,6 +159,35 @@ export default function Profile() {
         }
       });
       setClick(true);
+    }
+  };
+
+  const appFeedback = async () => {
+    if (window.ethereum._state.accounts.length !== 0) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(
+        process.env.NEXT_PUBLIC_DOCTORSIDE_ADDRESS,
+        doctorsideabi,
+        signer
+      );
+      const accounts = await provider.listAccounts();
+      const tx = await contract.submitAppointmentFeedback(
+        modalAppId,
+        modalFeedBack
+      );
+      await tx.wait();
+      toast({
+        title: "Feedback is being submitted",
+        description:
+          "This feedback will be reflected on Doctor's Testimonial Page",
+        status: "success",
+        duration: 1000,
+        isClosable: true,
+        position: "top-right",
+      });
+      onClose();
+      router.refresh();
     }
   };
 
@@ -145,6 +239,91 @@ export default function Profile() {
               </CardFooter>
             </Card>
           ))}
+          <Divider mt={12} mb={12} />
+          <Center mb={12}>
+            <Heading mt="2%"> Appointments:- </Heading>
+          </Center>
+
+          <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>
+                Feedback for Appointment Id - {modalAppId}
+              </ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <Input
+                  type="text"
+                  onChange={(e) => {
+                    setModalFeedback(e.target.value);
+                  }}
+                />
+              </ModalBody>
+
+              <ModalFooter>
+                <Button colorScheme="blue" mr={3} onClick={onClose}>
+                  Close
+                </Button>
+                <Button colorScheme="blue" onClick={appFeedback}>
+                  Submit Feedback
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+
+          {appButton ? (
+            <Center>
+              <Button my="3%" xl onClick={getPatientAppointments}>
+                View All Appointments{" "}
+              </Button>
+            </Center>
+          ) : (
+            <Box as={Container} maxW="7xl" mt={14} p={4}>
+              {!userApp ? (
+                <>No Appointments</>
+              ) : (
+                <TableContainer>
+                  <Table variant="simple">
+                    <TableCaption>
+                      All Appointments booked by {patientData.userName}
+                    </TableCaption>
+                    <Thead>
+                      <Tr>
+                        <Th>Appointment Id</Th>
+                        <Th>Doctor Name</Th>
+                        <Th>Appointment Subject</Th>
+                        <Th>Appointment Date and Time</Th>
+                        <Th>Appointment Feedback</Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {userApp.map((app) => (
+                        <Tr>
+                          <Td>{Number(app.appData.appId)}</Td>
+                          <Td>{app.docData.userName}</Td>
+                          <Td>{app.appData.appSubject}</Td>
+                          <Td>
+                            {app.appData.appDate} ({app.appData.startTime} -{" "}
+                            {app.appData.endTime})
+                          </Td>
+                          <Td>
+                            <Button
+                              onClick={() => {
+                                setModalAppId(Number(app.appData.appId));
+                                onOpen();
+                              }}
+                            >
+                              Give Feedback
+                            </Button>
+                          </Td>
+                        </Tr>
+                      ))}
+                    </Tbody>
+                  </Table>
+                </TableContainer>
+              )}
+            </Box>
+          )}
         </>
       )}
     </div>
