@@ -105,7 +105,7 @@ export default function Home() {
                   colorScheme={"red"}
                   bg={"red.400"}
                   _hover={{ bg: "red.500" }}
-                  onClick={() => auth.signIn()}
+                  // onClick={() => auth.signIn()}
                   textColor={"white"}
                 >
                   Connect Wallet
