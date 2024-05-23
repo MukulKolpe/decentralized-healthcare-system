@@ -3,7 +3,7 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import WagmiProvider from "../utils/wagmiprovider";
-
+import ErrorBoundary from "../components/ErrorBoundary";
 import Navbar from "../components/Navbar";
 
 const colors = {
@@ -29,11 +29,13 @@ const theme = extendTheme({ colors, config });
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <WagmiProvider>
-      <ChakraProvider theme={theme}>
-        <Navbar />
-        <Component {...pageProps} />
-      </ChakraProvider>
-    </WagmiProvider>
+    <ErrorBoundary>
+      <WagmiProvider>
+        <ChakraProvider theme={theme}>
+          <Navbar />
+          <Component {...pageProps} />
+        </ChakraProvider>
+      </WagmiProvider>
+    </ErrorBoundary>
   );
 }
