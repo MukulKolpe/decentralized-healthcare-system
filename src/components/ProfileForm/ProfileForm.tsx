@@ -52,7 +52,7 @@ export default function ProfileForm() {
   };
 
   const uploadReport = async () => {
-    if (window.ethereum._state.accounts.length !== 0) {
+    if (window.ethereum._state.accounts?.length !== 0) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(
@@ -67,7 +67,7 @@ export default function ProfileForm() {
   };
 
   const handleSubmit = async () => {
-    if (window.ethereum._state.accounts.length !== 0) {
+    if (window.ethereum._state.accounts?.length !== 0) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(

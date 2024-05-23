@@ -47,7 +47,7 @@ const Admin = () => {
   const router = useRouter();
 
   const handleClick = async (e: any) => {
-    if (window.ethereum._state.accounts.length !== 0) {
+    if (window.ethereum._state.accounts?.length !== 0) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(

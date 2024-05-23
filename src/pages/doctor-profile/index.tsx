@@ -147,7 +147,7 @@ const index = () => {
   };
 
   const loadDoctorinfo = async () => {
-    if (window.ethereum._state.accounts.length !== 0) {
+    if (window.ethereum._state.accounts?.length !== 0) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(
@@ -173,7 +173,7 @@ const index = () => {
   };
 
   const loadAppointmentData = async () => {
-    if (window.ethereum._state.accounts.length !== 0) {
+    if (window.ethereum._state.accounts?.length !== 0) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(
@@ -224,7 +224,7 @@ const index = () => {
 
   const loadTimeSlots = async (givenDate) => {
     console.log(givenDate);
-    if (window.ethereum._state.accounts.length !== 0) {
+    if (window.ethereum._state.accounts?.length !== 0) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(
@@ -254,7 +254,7 @@ const index = () => {
   };
 
   const openTimeSlot = async () => {
-    if (window.ethereum._state.accounts.length !== 0) {
+    if (window.ethereum._state.accounts?.length !== 0) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(
@@ -351,7 +351,7 @@ const index = () => {
   };
 
   const approveAppointment = async (givenAppId) => {
-    if (window.ethereum._state.accounts.length !== 0) {
+    if (window.ethereum._state.accounts?.length !== 0) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(
@@ -377,7 +377,7 @@ const index = () => {
   };
 
   const uploadPatientReport = async (patientWallet, doctorWallet) => {
-    if (window.ethereum._state.accounts.length !== 0) {
+    if (window.ethereum._state.accounts?.length !== 0) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(

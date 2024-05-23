@@ -57,7 +57,7 @@ const ImagesArray = [
 ];
 
 const returnRandomImage = () => {
-  return ImagesArray[Math.floor(Math.random() * ImagesArray.length)];
+  return ImagesArray[Math.floor(Math.random() * ImagesArray?.length)];
 };
 
 interface FeatureProps {
@@ -92,7 +92,7 @@ const BookAppointment = () => {
   const [sysUsers, setSysUsers] = useState([]);
 
   const handleClick = async (e: any) => {
-    if (window.ethereum._state.accounts.length !== 0) {
+    if (window.ethereum._state.accounts?.length !== 0) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(
