@@ -273,7 +273,7 @@ export default function Profile() {
 
           {appButton ? (
             <Center>
-              <Button my="3%" xl onClick={getPatientAppointments}>
+              <Button my="3%" onClick={getPatientAppointments}>
                 View All Appointments{" "}
               </Button>
             </Center>
