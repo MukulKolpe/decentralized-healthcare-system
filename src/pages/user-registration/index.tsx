@@ -1,4 +1,3 @@
-"use client";
 // @ts-nocheck comment
 import { useState, useRef } from "react";
 import { ethers } from "ethers";
