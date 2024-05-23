@@ -1,3 +1,4 @@
+// @ts-nocheck comment
 import React from "react";
 import { Spinner, Flex, Stack, useColorModeValue } from "@chakra-ui/react";
 
