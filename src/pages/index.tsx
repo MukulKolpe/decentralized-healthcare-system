@@ -16,6 +16,11 @@ import {
   createIcon,
   useColorModeValue,
 } from "@chakra-ui/react";
+import {
+  useConnectModal,
+  useAccountModal,
+  useChainModal,
+} from "@rainbow-me/rainbowkit";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -45,6 +50,7 @@ export const Blob = (props) => {
 };
 
 export default function Home() {
+  const { openConnectModal } = useConnectModal();
   return (
     <>
       <Head>
@@ -105,7 +111,7 @@ export default function Home() {
                   colorScheme={"red"}
                   bg={"red.400"}
                   _hover={{ bg: "red.500" }}
-                  // onClick={() => auth.signIn()}
+                  onClick={openConnectModal}
                   textColor={"white"}
                 >
                   Connect Wallet
