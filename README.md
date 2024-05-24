@@ -45,7 +45,7 @@ yarn run dev
 ```
 8. For nodemailer server, Configure Gmail password / Auth Token in [/nodemailer/index.js](https://github.com/MukulKolpe/decentralized-healthcare-system/blob/main/nodemailer/index.js).
 
-9. Install Dependencies.
+9. Install Dependencies in the `/nodemailer` directory.
 ```
 yarn
 ```
